@@ -57,10 +57,6 @@ class Board extends Component {
       "num12": this.refs.imgNum12,
     }
 
-    for (const prop in this.imgs) {
-      this.imgs[prop].onLoad = () => {console.log('hi');}
-    }
-
     this.updateCanvas();
   }
 
@@ -69,6 +65,10 @@ class Board extends Component {
   }
 
   updateCanvas() {
+    // if (!this.refs) {
+    //   return;
+    // }
+    console.log("updating");
     const canvas = this.refs.canvas;
     const context = canvas.getContext("2d");
 
@@ -171,26 +171,26 @@ class Board extends Component {
         </button>
 
 
-        <img ref="wheat_tile" alt="" src={wheat} height="0" width="0" className="hidden"/>
-        <img ref="ore_tile" alt="" src={ore} height="0" width="0" className="hidden"/>
-        <img ref="wood_tile" alt="" src={wood} height="0" width="0" className="hidden"/>
-        <img ref="sheep_tile" alt="" src={sheep} height="0" width="0" className="hidden"/>
-        <img ref="brick_tile" alt="" src={brick} height="0" width="0" className="hidden"/>
-        <img ref="desert_tile" alt="" src={desert} height="0" width="0" className="hidden"/>
-        <img ref="water_tile" alt="" src={water} height="0" width="0" className="hidden"/>
+        <img ref="wheat_tile" alt="" src={wheat} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="ore_tile" alt="" src={ore} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="wood_tile" alt="" src={wood} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="sheep_tile" alt="" src={sheep} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="brick_tile" alt="" src={brick} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="desert_tile" alt="" src={desert} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="water_tile" alt="" src={water} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
 
-        <img ref="imgNum2" alt="" src={imgNum2} height="0" width="0" className="hidden"/>
-        <img ref="imgNum3" alt="" src={imgNum3} height="0" width="0" className="hidden"/>
-        <img ref="imgNum4" alt="" src={imgNum4} height="0" width="0" className="hidden"/>
-        <img ref="imgNum5" alt="" src={imgNum5} height="0" width="0" className="hidden"/>
-        <img ref="imgNum6" alt="" src={imgNum6} height="0" width="0" className="hidden"/>
-        <img ref="imgNum8" alt="" src={imgNum8} height="0" width="0" className="hidden"/>
-        <img ref="imgNum9" alt="" src={imgNum9} height="0" width="0" className="hidden"/>
-        <img ref="imgNum10" alt="" src={imgNum10} height="0" width="0" className="hidden"/>
-        <img ref="imgNum11" alt="" src={imgNum11} height="0" width="0" className="hidden"/>
-        <img ref="imgNum12" alt="" src={imgNum12} height="0" width="0" className="hidden"/>
+        <img ref="imgNum2" alt="" src={imgNum2} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum3" alt="" src={imgNum3} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum4" alt="" src={imgNum4} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum5" alt="" src={imgNum5} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum6" alt="" src={imgNum6} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum8" alt="" src={imgNum8} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum9" alt="" src={imgNum9} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum10" alt="" src={imgNum10} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum11" alt="" src={imgNum11} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
+        <img ref="imgNum12" alt="" src={imgNum12} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
 
-        <img ref="ocean" alt="" src={ocean} height="0" width="0" className="hidden"/>
+        <img ref="ocean" alt="" src={ocean} height="0" width="0" className="hidden" onLoad={() => this.updateCanvas()}/>
       </div>
     );
   }
