@@ -22,8 +22,8 @@ class App extends Component {
       });
   }
 
-  generateNewBoard() {
-    fetch("https://opencatanserver.herokuapp.com/generate/3/5")
+  generateNewBoard(min, max) {
+    fetch("https://opencatanserver.herokuapp.com/generate/" + min + "/" + max)
       .then(response => response.json()).then((data) => {
         console.log(data);
         this.setState({ game: data });
@@ -38,7 +38,7 @@ class App extends Component {
       <div className="App">
         <p>Hello, World</p>
         <Board tile_width={150} tile_height={174} game_state={this.state.game}/>
-        <ControlArea game_state={this.state.game} onGenerateNewBoard={(e) => this.generateNewBoard()}/>
+        <ControlArea game_state={this.state.game} onGenerateNewBoard={(min, max) => this.generateNewBoard(min, max)}/>
       </div>
     );
   }

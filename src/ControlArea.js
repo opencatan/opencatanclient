@@ -3,11 +3,15 @@ import React, { Component } from 'react';
 class ControlArea extends Component {
   constructor(props) {
     super(props);
-    this.state = {"name": ""};
+    this.state = {"name": "",
+                  "min": "3",
+                  "max": "5"};
   }
 
-  onNameChange(e) {
-    this.setState({name: e.target.value});
+  onValueChange(key, e) {
+    const newState = {};
+    newState[key] = e.target.value;
+    this.setState(newState);
   }
 
   render() {
@@ -43,10 +47,14 @@ class ControlArea extends Component {
 
     return (
       <div>
-        <button onClick={(e) => this.props.onGenerateNewBoard()}>
+        <button onClick={(e) => this.props.onGenerateNewBoard(this.state.min, this.state.max)}>
           Generate New Board
         </button>
-        <input type="text" value={this.state.name} onChange={(e) => this.onNameChange(e)} />
+        <input type="text" value={this.state.min} onChange={(e) => this.onValueChange("min", e)} />
+        <input type="text" value={this.state.max} onChange={(e) => this.onValueChange("max", e)} />
+        <br />
+        <label>Name: </label>
+        <input type="text" value={this.state.name} onChange={(e) => this.onValueChange("name", e)} />
         {playerResources}
       </div>
     )
