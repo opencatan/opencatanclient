@@ -18,6 +18,8 @@ import imgNum10 from './images/img_num_10.png';
 import imgNum11 from './images/img_num_11.png';
 import imgNum12 from './images/img_num_12.png';
 
+import ocean from './images/oceanNew.gif';
+
 class Board extends Component {
 
   constructor(props) {
@@ -43,6 +45,8 @@ class Board extends Component {
       "sheep": this.refs.sheep_tile,
       "desert": this.refs.desert_tile,
       "water": this.refs.water_tile,
+
+      "ocean": this.refs.ocean,
 
       "num2": this.refs.imgNum2,
       "num3": this.refs.imgNum3,
@@ -72,8 +76,16 @@ class Board extends Component {
     const oldTransform = context.getTransform();
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+    //draw background
+    const ptrn = context.createPattern(this.imgs['ocean'], 'repeat'); // Create a pattern with this image, and set it to "repeat".
+    context.fillStyle = ptrn;
+    context.fillRect(0, 0, canvas.width, canvas.height); // context.fillRect(x, y, width, height);
+
     context.setTransform(oldTransform);
 
+    //draw tiles
     if (this.props.game_state.board) {
       this.props.game_state.board.forEach( (tile_row, row) => {
         tile_row.forEach( (tile, column) => {
@@ -170,6 +182,8 @@ class Board extends Component {
         <img ref="imgNum10" alt="" src={imgNum10} height="0" width="0" className="hidden"/>
         <img ref="imgNum11" alt="" src={imgNum11} height="0" width="0" className="hidden"/>
         <img ref="imgNum12" alt="" src={imgNum12} height="0" width="0" className="hidden"/>
+
+        <img ref="ocean" alt="" src={ocean} height="0" width="0" className="hidden"/>
       </div>
     );
   }
