@@ -13,30 +13,32 @@ class Board extends Component {
   }
 
   componentDidMount() {
-    const canvas = this.refs.canvas
-    const ctx = canvas.getContext("2d")
+    this.updateCanvas();
+  }
 
+  componentDidUpdate() {
+    this.updateCanvas();
+  }
+
+  updateCanvas() {
+    const canvas = this.refs.canvas;
+    const context = canvas.getContext("2d");
+
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     //TESTING CODE. should do this programatically
     const ore_img = this.refs.ore_tile
-    ore_img.onload = () => {
-      ctx.drawImage(ore_img, 0, 0, this.props.tile_width, this.props.tile_height);
-    }
+    context.drawImage(ore_img, 0, 0, this.props.tile_width, this.props.tile_height);
 
     const wheat_img = this.refs.wheat_tile
-    wheat_img.onload = () => {
-      ctx.drawImage(wheat_img, this.props.tile_width, 0, this.props.tile_width, this.props.tile_height)
-    }
+    context.drawImage(wheat_img, this.props.tile_width, 0, this.props.tile_width, this.props.tile_height)
 
     const wood_img = this.refs.wood_tile
-    wood_img.onload = () => {
-      ctx.drawImage(wood_img, this.props.tile_width / 2, this.props.tile_height - this.tile_offset, this.props.tile_width, this.props.tile_height)
-    }
+    context.drawImage(wood_img, this.props.tile_width / 2, this.props.tile_height - this.tile_offset, this.props.tile_width, this.props.tile_height)
 
     const brick_img = this.refs.brick_tile
-    brick_img.onload = () => {
-      ctx.drawImage(brick_img, this.props.tile_width * 3 / 2, this.props.tile_height - this.tile_offset, this.props.tile_width, this.props.tile_height)
-    }
+    context.drawImage(brick_img, this.props.tile_width * 3 / 2, this.props.tile_height - this.tile_offset, this.props.tile_width, this.props.tile_height)
   }
 
   render() {
