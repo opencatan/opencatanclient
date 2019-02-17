@@ -145,7 +145,13 @@ class Board extends Component {
 
   }
 
-  onCanvasMouseUpOrLeave(e) {
+  onCanvasMouseEnter(e) {
+    if (e.buttons === 0) {
+      this.setState( {"mouseDownInCanvas": false});
+    }
+  }
+
+  onCanvasMouseUp(e) {
     this.setState( {"mouseDownInCanvas": false} );
   }
 
@@ -155,7 +161,8 @@ class Board extends Component {
         <canvas ref="canvas" width="800" height="600" style={{border:"1px solid #000000"}}
           onMouseDown={(e) => this.onCanvasMouseDown(e)}
           onMouseMove={(e) => this.onCanvasMouseMove(e)}
-          onMouseUp={(e) => this.onCanvasMouseUpOrLeave(e)}/>
+          onMouseUp={(e) => this.onCanvasMouseUp(e)}
+          onMouseEnter={(e) => this.onCanvasMouseEnter(e)}/>
         <button onClick={() => this.zoom(1.1111111)}>
           Zoom In
         </button>

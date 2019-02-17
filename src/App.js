@@ -35,7 +35,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <p>Hello, World</p>
         <Board tile_width={150} tile_height={174} game_state={this.state.game}/>
         <ControlArea game_state={this.state.game} onGenerateNewBoard={(min, max) => this.generateNewBoard(min, max)}/>
       </div>
