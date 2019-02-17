@@ -34,9 +34,6 @@ class Board extends Component {
   }
 
   componentDidMount() {
-    if (!this.refs.ore_tile || !this.refs.wheat_tile || !this.refs.wood_tile || !this.refs.brick_tile || !this.refs.sheep_tile || !this.refs.desert_tile) {
-      console.log("something went wrong");
-    }
     this.imgs = {
       "ore": this.refs.ore_tile,
       "wheat": this.refs.wheat_tile,
@@ -60,6 +57,9 @@ class Board extends Component {
       "num12": this.refs.imgNum12,
     }
 
+    for (const prop in this.imgs) {
+      this.imgs[prop].onLoad = () => {console.log('hi');}
+    }
 
     this.updateCanvas();
   }
