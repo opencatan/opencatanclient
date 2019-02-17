@@ -7,10 +7,6 @@
     "react-dom": "^16.8.2",
     "react-scripts": "2.1.5"
   },
-  "engines": {
-    "npm": "5.7.1",
-    "node": "9.5.0"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
