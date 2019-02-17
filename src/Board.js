@@ -52,11 +52,25 @@ class Board extends Component {
     const x = this.props.tile_width * column + this.props.tile_width * 0.5 * (row % 2 === 1);
     const y = (this.props.tile_height - this.tile_offset) * row;
 
-
     if (tile && tile.resource_type && this.imgs[tile.resource_type]) {
       const img = this.imgs[tile.resource_type];
       context.drawImage(img, x, y, this.props.tile_width, this.props.tile_height);
+      context.font = "30px Arial";
+      const cx = x + this.props.tile_width / 2;
+      const cy = y + this.props.tile_height / 2;
+
+      // draw circle
+      context.beginPath();
+      context.arc(cx, cy, 20, 0, 2 * Math.PI);
+      context.fillStyle = "white";
+      context.fill();
+
+      //draw number
+      context.fillStyle = "black";
+      context.fillText(tile.resource_number, cx - 8, cy + 10);
     }
+
+
   }
 
   render() {
