@@ -127,13 +127,13 @@ class Board extends Component {
           Down
         </button>
 
-        <img ref="wheat_tile" alt="" src={wheat} className="hidden"/>
-        <img ref="ore_tile" alt="" src={ore} className="hidden"/>
-        <img ref="wood_tile" alt="" src={wood} className="hidden"/>
-        <img ref="sheep_tile" alt="" src={sheep} className="hidden"/>
-        <img ref="brick_tile" alt="" src={brick} className="hidden"/>
-        <img ref="desert_tile" alt="" src={desert} className="hidden"/>
-        <img ref="water_tile" alt="" src={water} className="hidden"/>
+        <img ref="wheat_tile" alt="" src={wheat} height="0" width="0" className="hidden"/>
+        <img ref="ore_tile" alt="" src={ore} height="0" width="0" className="hidden"/>
+        <img ref="wood_tile" alt="" src={wood} height="0" width="0" className="hidden"/>
+        <img ref="sheep_tile" alt="" src={sheep} height="0" width="0" className="hidden"/>
+        <img ref="brick_tile" alt="" src={brick} height="0" width="0" className="hidden"/>
+        <img ref="desert_tile" alt="" src={desert} height="0" width="0" className="hidden"/>
+        <img ref="water_tile" alt="" src={water} height="0" width="0" className="hidden"/>
       </div>
     );
   }
