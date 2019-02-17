@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Board from './Board';
+import ControlArea from './ControlArea';
 import './App.css';
 
 class App extends Component {
@@ -25,7 +26,8 @@ class App extends Component {
     return (
       <div className="App">
         <p>Hello, World</p>
-        <Board tile_width={100} tile_height={116} game_state={this.state.game}/>
+        <Board tile_width={150} tile_height={174} game_state={this.state.game}/>
+        <ControlArea />
       </div>
     );
   }

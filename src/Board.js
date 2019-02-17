@@ -36,8 +36,11 @@ class Board extends Component {
     const canvas = this.refs.canvas;
     const context = canvas.getContext("2d");
 
+    //clear canvas
+    const oldTransform = context.getTransform();
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
+    context.setTransform(oldTransform);
 
     if (this.props.game_state.board) {
       this.props.game_state.board.forEach( (tile_row, row) => {
@@ -59,7 +62,7 @@ class Board extends Component {
       const cx = x + this.props.tile_width / 2;
       const cy = y + this.props.tile_height / 2;
 
-      // draw circle
+      //draw circle
       context.beginPath();
       context.arc(cx, cy, 20, 0, 2 * Math.PI);
       context.fillStyle = "white";
@@ -69,14 +72,32 @@ class Board extends Component {
       context.fillStyle = "black";
       context.fillText(tile.resource_number, cx - 8, cy + 10);
     }
+  }
 
-
+  move(x, y) {
+    const canvas = this.refs.canvas;
+    const context = canvas.getContext("2d");
+    context.translate(x, y);
+    this.updateCanvas();
   }
 
   render() {
     return (
       <div>
         <canvas ref="canvas" width="800" height="600" style={{border:"1px solid #000000"}} />
+        <button onClick={() => this.move(-10, 0)}>
+          Left
+        </button>
+        <button onClick={() => this.move(10, 0)}>
+          Right
+        </button>
+        <button onClick={() => this.move(0, -10)}>
+          Up
+        </button>
+        <button onClick={() => this.move(0, 10)}>
+          Down
+        </button>
+
         <img ref="wheat_tile" alt="" src={wheat} className="hidden"/>
         <img ref="ore_tile" alt="" src={ore} className="hidden"/>
         <img ref="wood_tile" alt="" src={wood} className="hidden"/>
