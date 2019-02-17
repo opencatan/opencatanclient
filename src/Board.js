@@ -5,12 +5,16 @@ import wood from './images/wood.png';
 import sheep from './images/sheep.png';
 import brick from './images/brick.png';
 import desert from './images/desert.png';
+import water from './images/water.png';
 
 class Board extends Component {
 
   constructor(props) {
     super(props);
     this.tile_offset = 0.22 * this.props.tile_height;
+    this.state = {"mouseDownInCanvas": false,
+                  "canvasMouseX": 0,
+                  "canvasMouseY": 0};
   }
 
   componentDidMount() {
@@ -23,7 +27,8 @@ class Board extends Component {
       "wood": this.refs.wood_tile,
       "brick": this.refs.brick_tile,
       "sheep": this.refs.sheep_tile,
-      "desert": this.refs.desert_tile
+      "desert": this.refs.desert_tile,
+      "water": this.refs.water_tile,
     }
     this.updateCanvas();
   }
@@ -81,10 +86,34 @@ class Board extends Component {
     this.updateCanvas();
   }
 
+  onCanvasMouseDown(e) {
+    this.setState( {"mouseDownInCanvas": true,
+                    "canvasMouseX": e.pageX,
+                    "canvasMouseY": e.pageY} );
+  }
+
+  onCanvasMouseMove(e) {
+    if (this.state.mouseDownInCanvas) {
+      const diffX = e.pageX - this.state.canvasMouseX;
+      const diffY = e.pageY - this.state.canvasMouseY;
+      this.move(diffX, diffY);
+      this.setState( {"canvasMouseX": e.pageX,
+                      "canvasMouseY": e.pageY} );
+    }
+
+  }
+
+  onCanvasMouseUpOrLeave(e) {
+    this.setState( {"mouseDownInCanvas": false} );
+  }
+
   render() {
     return (
       <div>
-        <canvas ref="canvas" width="800" height="600" style={{border:"1px solid #000000"}} />
+        <canvas ref="canvas" width="800" height="600" style={{border:"1px solid #000000"}}
+          onMouseDown={(e) => this.onCanvasMouseDown(e)}
+          onMouseMove={(e) => this.onCanvasMouseMove(e)}
+          onMouseUp={(e) => this.onCanvasMouseUpOrLeave(e)}/>
         <button onClick={() => this.move(-10, 0)}>
           Left
         </button>
@@ -104,6 +133,7 @@ class Board extends Component {
         <img ref="sheep_tile" alt="" src={sheep} className="hidden"/>
         <img ref="brick_tile" alt="" src={brick} className="hidden"/>
         <img ref="desert_tile" alt="" src={desert} className="hidden"/>
+        <img ref="water_tile" alt="" src={water} className="hidden"/>
       </div>
     );
   }
