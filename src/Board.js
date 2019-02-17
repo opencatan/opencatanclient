@@ -65,10 +65,6 @@ class Board extends Component {
   }
 
   updateCanvas() {
-    // if (!this.refs) {
-    //   return;
-    // }
-    console.log("updating");
     const canvas = this.refs.canvas;
     const context = canvas.getContext("2d");
 
