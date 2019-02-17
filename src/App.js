@@ -32,7 +32,6 @@ class App extends Component {
         console.log('Error in fetching new data', error);
       });
   }
-
   render() {
     return (
       <div className="App">

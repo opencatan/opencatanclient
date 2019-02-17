@@ -27,7 +27,8 @@ class Board extends Component {
     this.number_tile_height = 0.94 * this.number_tile_width;
     this.state = {"mouseDownInCanvas": false,
                   "canvasMouseX": 0,
-                  "canvasMouseY": 0};
+                  "canvasMouseY": 0,
+                  "scale": 1};
   }
 
   componentDidMount() {
@@ -99,6 +100,15 @@ class Board extends Component {
     }
   }
 
+  zoom(scaleUpdate) {
+    const canvas = this.refs.canvas;
+    const context = canvas.getContext("2d");
+    context.scale(scaleUpdate, scaleUpdate);
+    const scale = this.state.scale * scaleUpdate;
+    this.setState({scale});
+    this.updateCanvas();
+  }
+
   move(x, y) {
     const canvas = this.refs.canvas;
     const context = canvas.getContext("2d");
@@ -114,8 +124,8 @@ class Board extends Component {
 
   onCanvasMouseMove(e) {
     if (this.state.mouseDownInCanvas) {
-      const diffX = e.pageX - this.state.canvasMouseX;
-      const diffY = e.pageY - this.state.canvasMouseY;
+      const diffX = (e.pageX - this.state.canvasMouseX) / this.state.scale;
+      const diffY = (e.pageY - this.state.canvasMouseY) / this.state.scale;
       this.move(diffX, diffY);
       this.setState( {"canvasMouseX": e.pageX,
                       "canvasMouseY": e.pageY} );
@@ -134,18 +144,13 @@ class Board extends Component {
           onMouseDown={(e) => this.onCanvasMouseDown(e)}
           onMouseMove={(e) => this.onCanvasMouseMove(e)}
           onMouseUp={(e) => this.onCanvasMouseUpOrLeave(e)}/>
-        <button onClick={() => this.move(-10, 0)}>
-          Left
+        <button onClick={() => this.zoom(1.1111111)}>
+          Zoom In
         </button>
-        <button onClick={() => this.move(10, 0)}>
-          Right
+        <button onClick={() => this.zoom(0.9)}>
+          Zoom Out
         </button>
-        <button onClick={() => this.move(0, -10)}>
-          Up
-        </button>
-        <button onClick={() => this.move(0, 10)}>
-          Down
-        </button>
+
 
         <img ref="wheat_tile" alt="" src={wheat} height="0" width="0" className="hidden"/>
         <img ref="ore_tile" alt="" src={ore} height="0" width="0" className="hidden"/>
