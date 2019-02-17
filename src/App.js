@@ -12,7 +12,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('https://opencatan.herokuapp.com/')
+    fetch('https://opencatanserver.herokuapp.com/')
       .then(response => response.json()).then((data) => {
         console.log(data);
         this.setState({ game: data });
@@ -23,7 +23,7 @@ class App extends Component {
   }
 
   generateNewBoard() {
-    fetch("https://opencatan.herokuapp.com/generate/3/5")
+    fetch("https://opencatanserver.herokuapp.com/generate/3/5")
       .then(response => response.json()).then((data) => {
         console.log(data);
         this.setState({ game: data });
@@ -38,7 +38,7 @@ class App extends Component {
       <div className="App">
         <p>Hello, World</p>
         <Board tile_width={150} tile_height={174} game_state={this.state.game}/>
-        <ControlArea onGenerateNewBoard={(e) => this.generateNewBoard()}/>
+        <ControlArea game_state={this.state.game} onGenerateNewBoard={(e) => this.generateNewBoard()}/>
       </div>
     );
   }
