@@ -99,7 +99,7 @@ class Board extends Component {
       const img = this.imgs[tile.resource_type];
       context.drawImage(img, x, y, this.props.tile_width, this.props.tile_height);
 
-      if (tile.resource_number !== 7) {
+      if ((2 <= tile.resource_number && tile.resource_number <= 6) || (8 <= tile.resource_number && tile.resource_number <= 12)) {
         const imgNumber = this.imgs["num" + tile.resource_number];
         const cx = x + this.props.tile_width / 2 - this.number_tile_width / 2;
         const cy = y + this.props.tile_height / 2 - this.number_tile_height / 2;
