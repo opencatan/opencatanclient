@@ -155,7 +155,7 @@ class Board extends Component {
                        {dx: 70, dy: 20},
                        {dx: 70, dy: 60},
                        {dx: 35, dy: 80},
-                       {dx: 0, dy: 30}][settlement.location[2]]
+                       {dx: 0, dy: 60}][settlement.location[2]]
 
     context.fillStyle = this.colorForPlayer(settlement.owner);
     context.fillRect(x + dx*2, y + dy*2, 20, 20);
@@ -185,7 +185,7 @@ class Board extends Component {
                        {dx: 70, dy: 20},
                        {dx: 70, dy: 60},
                        {dx: 35, dy: 80},
-                       {dx: 0, dy: 30}][road.v1[2]];
+                       {dx: 0, dy: 60}][road.v1[2]];
     const dx1 = dx;
     const dy1 = dy;
 
@@ -194,7 +194,7 @@ class Board extends Component {
                        {dx: 70, dy: 20},
                        {dx: 70, dy: 60},
                        {dx: 35, dy: 80},
-                       {dx: 0, dy: 30}][road.v2[2]];
+                       {dx: 0, dy: 60}][road.v2[2]];
     const dx2 = dx;
     const dy2 = dy;
 
