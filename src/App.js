@@ -16,6 +16,7 @@ class App extends Component {
   }
 
   serverURL() {
+    console.log(this.state.shouldUseLiveServer);
     return this.state.shouldUseLiveServer ? liveServerURL : devServerURL;
   }
 
@@ -48,6 +49,23 @@ class App extends Component {
         console.log('Error in fetching new data', error);
       });
   }
+
+  place() {
+    const object = this.refs.object_type.value;
+    const player = this.refs.player.value;
+    const i = this.refs.i.value;
+    const j = this.refs.j.value;
+    const k = this.refs.k.value;
+
+    const endpoint = this.serverURL() + "place/" + object + "/" + player + "/" + i + "/" + j + "/" + k;
+    console.log("fetching endpoint", endpoint);
+
+    fetch(endpoint)
+      .then(response => {
+        this.loadData();
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -57,6 +75,25 @@ class App extends Component {
         <label>Use live server: </label>
         <input name="Use live server" type="checkbox" checked={this.state.shouldUseLiveServer} onChange={(e) => this.handleInputChange(e)} />
         <button onClick={() => this.loadData()}>Reload data</button>
+
+        <br/>
+        <h1>Place Object</h1>
+        <label>Object type: </label>
+        <select ref="object_type">
+          <option value="settlement">Settlement</option>
+          <option value="city">City</option>
+          <option value="road">Road</option>
+        </select>
+        <br/>
+        <label>Player: </label>
+        <input ref="player" type="text"/>
+        <br/>
+        <label>Location: </label>
+        <input ref="i" type="text"/>
+        <input ref="j" type="text"/>
+        <input ref="k" type="text"/>
+        <br/>
+        <button onClick={() => this.place()}>Go</button>
       </div>
     );
   }

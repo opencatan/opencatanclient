@@ -89,11 +89,23 @@ class Board extends Component {
         });
       });
     }
+
+    //draw settlements
+    if (this.props.game_state.settlements) {
+      this.props.game_state.settlements.forEach( settlement => {
+        this.drawSettlement(context, settlement);
+      });
+    }
+  }
+
+  coordinatesFromIndices(row, column) {
+    const x = this.props.tile_width * column + this.props.tile_width * 0.5 * (row % 2 === 1);
+    const y = (this.props.tile_height - this.tile_offset) * row;
+    return {x, y}
   }
 
   drawTile(context, row, column, tile) {
-    const x = this.props.tile_width * column + this.props.tile_width * 0.5 * (row % 2 === 1);
-    const y = (this.props.tile_height - this.tile_offset) * row;
+    const {x, y} = this.coordinatesFromIndices(row, column);
 
     if (tile && tile.resource_type && this.imgs[tile.resource_type] && tile.resource_number) {
       const img = this.imgs[tile.resource_type];
@@ -106,6 +118,22 @@ class Board extends Component {
         context.drawImage(imgNumber, cx, cy, this.number_tile_width, this.number_tile_width);
       }
     }
+  }
+
+  drawSettlement(context, settlement) {
+    const row = settlement.location[0]
+    const column = settlement.location[1]
+    const {x, y} = this.coordinatesFromIndices(row, column);
+
+    const {dx, dy} = [{dx: 0, dy: 15},
+                       {dx: 35, dy: 0},
+                       {dx: 70, dy: 20},
+                       {dx: 70, dy: 60},
+                       {dx: 35, dy: 80},
+                       {dx: 0, dy: 30}][settlement.location[2]]
+
+    context.fillStyle = "#FF0000";
+    context.fillRect(x + dx*2, y + dy*2, 20, 20);
   }
 
   zoom(scaleUpdate) {
