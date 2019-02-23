@@ -11,7 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       game: {},
-      shouldUseLiveServer: true,
+      shouldUseLiveServer: false,
     }
   }
 
@@ -61,7 +61,11 @@ class App extends Component {
     console.log("fetching endpoint", endpoint);
 
     fetch(endpoint)
-      .then(response => {
+      .then(response => response.text()).then( data => {
+        console.log("response: ", data);
+        if (data) {
+          alert(data);
+        }
         this.loadData();
       });
   }

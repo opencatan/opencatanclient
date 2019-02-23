@@ -57,11 +57,29 @@ class Board extends Component {
       "num12": this.refs.imgNum12,
     }
 
+    this.colors = [
+      "tomato",
+      "blue",
+      "green",
+      "purple"
+    ]
+
     this.updateCanvas();
   }
 
   componentDidUpdate() {
     this.updateCanvas();
+  }
+
+  //TODO: OPTIMIZE THIS
+  colorForPlayer(playerName) {
+    if (this.props.game_state.players) {
+      const index = this.props.game_state.players.findIndex(player => {return player.name === playerName});
+      return this.colors[index];
+    } else {
+      return "black";
+    }
+
   }
 
   updateCanvas() {
@@ -96,6 +114,13 @@ class Board extends Component {
         this.drawSettlement(context, settlement);
       });
     }
+
+    //draw roads
+    if (this.props.game_state.roads) {
+      this.props.game_state.roads.forEach( road => {
+        this.drawRoad(context, road);
+      });
+    }
   }
 
   coordinatesFromIndices(row, column) {
@@ -121,8 +146,8 @@ class Board extends Component {
   }
 
   drawSettlement(context, settlement) {
-    const row = settlement.location[0]
-    const column = settlement.location[1]
+    const row = settlement.location[0];
+    const column = settlement.location[1];
     const {x, y} = this.coordinatesFromIndices(row, column);
 
     const {dx, dy} = [{dx: 0, dy: 15},
@@ -132,8 +157,52 @@ class Board extends Component {
                        {dx: 35, dy: 80},
                        {dx: 0, dy: 30}][settlement.location[2]]
 
-    context.fillStyle = "#FF0000";
+    context.fillStyle = this.colorForPlayer(settlement.owner);
     context.fillRect(x + dx*2, y + dy*2, 20, 20);
+
+    if (settlement.settlement === 2) { //is a city
+      context.fillStyle = "black";
+      context.fillRect(x + dx*2 + 5, y + dy*2 + 5, 10, 10);
+    }
+  }
+
+  drawRoad(context, road) {
+    const row1 = road.v1[0];
+    const column1 = road.v1[1];
+    var {x, y} = this.coordinatesFromIndices(row1, column1);
+    const x1 = x;
+    const y1 = y;
+    const row2 = road.v2[0];
+    const column2 = road.v2[1];
+    var {x, y} = this.coordinatesFromIndices(row2, column2);
+    const x2 = x;
+    const y2 = y;
+    x = (x1 + x2) / 2;
+    y = (y1 + y2) / 2;
+
+    var {dx, dy} = [{dx: 0, dy: 15},
+                       {dx: 35, dy: 0},
+                       {dx: 70, dy: 20},
+                       {dx: 70, dy: 60},
+                       {dx: 35, dy: 80},
+                       {dx: 0, dy: 30}][road.v1[2]];
+    const dx1 = dx;
+    const dy1 = dy;
+
+    var {dx, dy} = [{dx: 0, dy: 15},
+                       {dx: 35, dy: 0},
+                       {dx: 70, dy: 20},
+                       {dx: 70, dy: 60},
+                       {dx: 35, dy: 80},
+                       {dx: 0, dy: 30}][road.v2[2]];
+    const dx2 = dx;
+    const dy2 = dy;
+
+    const dx = (dx1 + dx2) / 2;
+    const dy = (dy1 + dy2) / 2;
+
+    context.fillStyle = this.colorForPlayer(road.owner);
+    context.fillRect(x + dx*2, y + dy*2, 12, 12);
   }
 
   zoom(scaleUpdate) {
