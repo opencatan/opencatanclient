@@ -57,10 +57,10 @@ class App extends Component {
     const j = this.refs.j.value;
     const k = this.refs.k.value;
 
-    const endpoint = this.serverURL() + "place/" + object + "/" + player + "/" + i + "/" + j + "/" + k;
-    console.log("fetching endpoint", endpoint);
+    const url = new URL(this.serverURL() + "place/" + object + "/" + i + "/" + j + "/" + k);
+    url.searchParams.append("player", player);
 
-    fetch(endpoint)
+    fetch(url)
       .then(response => response.text()).then( data => {
         console.log("response: ", data);
         if (data) {
