@@ -37,6 +37,7 @@ class App extends Component {
 
   componentDidMount() {
     this.loadData();
+    setInterval(() => {this.loadData()}, 2000); //poll every 2 seconds
   }
 
   generateNewBoard(min, max) {
