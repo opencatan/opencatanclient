@@ -70,6 +70,17 @@ class App extends Component {
       });
   }
 
+  hitEndpoint(endpoint) {
+    const url = new URL(this.serverURL() + endpoint);
+    fetch(url)
+      .then(response => response.text()).then( data => {
+        if (data) {
+          alert(data);
+        }
+        this.loadData();
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -98,6 +109,10 @@ class App extends Component {
         <input ref="k" type="text"/>
         <br/>
         <button onClick={() => this.place()}>Go</button>
+        <br />
+
+        <button onClick={() => this.hitEndpoint("roll_dice")}>Roll Dice</button>
+        <button onClick={() => this.hitEndpoint("end_turn")}>End Turn</button>
       </div>
     );
   }
