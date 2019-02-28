@@ -72,6 +72,8 @@ class App extends Component {
 
   hitEndpoint(endpoint) {
     const url = new URL(this.serverURL() + endpoint);
+    const player = this.refs.player.value;
+    url.searchParams.append("player", player);
     fetch(url)
       .then(response => response.text()).then( data => {
         if (data) {
