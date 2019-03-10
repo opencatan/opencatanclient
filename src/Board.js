@@ -156,6 +156,18 @@ class Board extends Component {
   }
 
   containingTileForPoint(px, py) {
+    // transform point. TODO: REFACTOR INTO A FUNCTION TO USE LATER
+    const canvas = this.refs.canvas;
+    const context = canvas.getContext("2d");
+
+    const transform = context.getTransform();
+    const inverse = transform.inverse();
+    let point = new DOMPoint(px, py);
+    point = point.matrixTransform(inverse);
+    px = point.x;
+    py = point.y;
+
+
     //TODO: OPTIMIZE WITH MATH
     for (let row = 0; row < this.props.game_state.board.length; row++) {
       for (let column = 0; column < this.props.game_state.board[row].length; column++) {
