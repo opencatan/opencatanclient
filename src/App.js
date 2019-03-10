@@ -6,12 +6,31 @@ import './App.css';
 const liveServerURL = 'https://opencatanserver.herokuapp.com/';
 const devServerURL = 'http://127.0.0.1:5000/';
 
+const debugSettlements = [
+  {"location": [0, 1, 0], "owner": "A", "settlement": 1},
+  {"location": [0, 1, 1], "owner": "A", "settlement": 1},
+  {"location": [0, 1, 2], "owner": "A", "settlement": 1},
+  {"location": [0, 1, 3], "owner": "A", "settlement": 1},
+  {"location": [0, 1, 4], "owner": "A", "settlement": 1},
+  {"location": [0, 1, 5], "owner": "A", "settlement": 1},
+];
+
+const debugRoads = [
+  {"owner": "A", "type": "road", "v1":[0, 1, 0], "v2":[0, 1, 1]},
+  {"owner": "A", "type": "road", "v1":[0, 1, 1], "v2":[0, 1, 2]},
+  {"owner": "A", "type": "road", "v1":[0, 1, 2], "v2":[0, 1, 3]},
+  {"owner": "A", "type": "road", "v1":[0, 1, 3], "v2":[0, 1, 4]},
+  {"owner": "A", "type": "road", "v1":[0, 1, 4], "v2":[0, 1, 5]},
+  {"owner": "A", "type": "road", "v1":[0, 1, 5], "v2":[0, 1, 0]},
+];
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       game: {},
       shouldUseLiveServer: false,
+      debug: false,
     }
   }
 
@@ -20,13 +39,19 @@ class App extends Component {
     return this.state.shouldUseLiveServer ? liveServerURL : devServerURL;
   }
 
-  handleInputChange(e) {
-    this.setState({shouldUseLiveServer: e.target.checked});
+  handleInputChange(field, e) {
+    let state = [];
+    state[field] = e.target.checked;
+    this.setState(state);
   }
 
   loadData() {
     fetch(this.serverURL())
       .then(response => response.json()).then((data) => {
+        if (this.state.debug) {
+          data.settlements = debugSettlements;
+          data.roads = debugRoads;
+        }
         console.log(data);
         this.setState({ game: data });
       }).catch((error) => {
@@ -37,7 +62,7 @@ class App extends Component {
 
   componentDidMount() {
     this.loadData();
-    setInterval(() => {this.loadData()}, 2000); //poll every 2 seconds
+    // setInterval(() => {this.loadData()}, 2000); //poll every 2 seconds
   }
 
   generateNewBoard(min, max) {
@@ -84,14 +109,26 @@ class App extends Component {
       });
   }
 
+  updateItemFields(row, column, itemIndex, itemType) {
+    this.refs.i.value = row;
+    this.refs.j.value = column;
+    this.refs.k.value = itemIndex;
+    this.refs.object_type.value = itemType;
+  }
+
   render() {
     return (
       <div className="App">
-        <Board tile_width={150} tile_height={174} game_state={this.state.game}/>
+        <Board
+          tile_width={150}
+          tile_height={174}
+          game_state={this.state.game}
+          on_item_update={(i, j, k, type) => this.updateItemFields(i, j, k, type)}
+          debug={this.state.debug}/>
         <ControlArea game_state={this.state.game} onGenerateNewBoard={(min, max) => this.generateNewBoard(min, max)}/>
 
         <label>Use live server: </label>
-        <input name="Use live server" type="checkbox" checked={this.state.shouldUseLiveServer} onChange={(e) => this.handleInputChange(e)} />
+        <input name="Use live server" type="checkbox" checked={this.state.shouldUseLiveServer} onChange={(e) => this.handleInputChange('shouldUseLiveServer', e)} />
         <button onClick={() => this.loadData()}>Reload data</button>
 
         <br/>
@@ -116,6 +153,10 @@ class App extends Component {
 
         <button onClick={() => this.hitEndpoint("roll_dice")}>Roll Dice</button>
         <button onClick={() => this.hitEndpoint("end_turn")}>End Turn</button>
+        <br />
+
+        <label>Debug: </label>
+        <input name="Debug" type="checkbox" checked={this.state.debug} onChange={(e) => this.handleInputChange('debug', e)} />
       </div>
     );
   }

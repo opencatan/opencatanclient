@@ -62,7 +62,29 @@ class Board extends Component {
       "blue",
       "green",
       "purple"
-    ]
+    ];
+
+    // TODO: don't hardcode these. make relative to tile size
+    this.settlementOffsets = [{dx: 0, dy: 30},
+                       {dx: 70, dy: 0},
+                       {dx: 140, dy: 40},
+                       {dx: 140, dy: 120},
+                       {dx: 70, dy: 160},
+                       {dx: 0, dy: 120}];
+
+    // TODO: only do this math once (i.e. refactor drawRoad)
+    this.roadOffsets = [];
+    this.settlementOffsets.forEach( (offset, index) => {
+      let nextIndex = (index + 1) % 6;
+      let offset1 = this.settlementOffsets[index];
+      let x1 = offset1.dx; let y1 = offset1.dy;
+      let offset2 = this.settlementOffsets[nextIndex];
+      let x2 = offset2.dx; let y2 = offset2.dy;
+
+      let dx = (x1 + x2) / 2;
+      let dy = (y1 + y2) / 2;
+      this.roadOffsets.push({dx, dy});
+    });
 
     this.updateCanvas();
   }
@@ -123,10 +145,45 @@ class Board extends Component {
     }
   }
 
+  pointInRect(px, py, x, y, width, height) {
+    return x <= px && px <= (x + width) && y <= py && py <= (y + height);
+  }
+
   coordinatesFromIndices(row, column) {
     const x = this.props.tile_width * column + this.props.tile_width * 0.5 * (row % 2 === 1);
     const y = (this.props.tile_height - this.tile_offset) * row;
     return {x, y}
+  }
+
+  containingTileForPoint(px, py) {
+    //TODO: OPTIMIZE WITH MATH
+    for (let row = 0; row < this.props.game_state.board.length; row++) {
+      for (let column = 0; column < this.props.game_state.board[row].length; column++) {
+        let {x, y} = this.coordinatesFromIndices(row, column);
+        if (this.pointInRect(px, py, x, y, this.props.tile_width, this.props.tile_height)) {
+          return {row, column};
+        }
+      }
+    }
+  }
+
+  closestItemForPointAndTile(px, py, row, column) {
+    let minDistance = Number.MAX_VALUE;
+    let closest;
+    let {x, y} = this.coordinatesFromIndices(row, column);
+    let offsets = this.settlementOffsets.concat(this.roadOffsets);
+    offsets.forEach( (offset, index) => {
+      let x1 = x + offset.dx;
+      let y1 = y + offset.dy;
+      let distance = (x1 - px)**2 + (y1 - py)**2;
+      if (distance < minDistance) {
+        minDistance = distance;
+        let itemType = index > 5 ? "road" : "settlement";
+        let itemIndex = index > 5 ? index - 6 : index;
+        closest = {itemType, itemIndex};
+      }
+    });
+    return closest;
   }
 
   drawTile(context, row, column, tile) {
@@ -135,6 +192,9 @@ class Board extends Component {
     if (tile && tile.resource_type && this.imgs[tile.resource_type] && tile.resource_number) {
       const img = this.imgs[tile.resource_type];
       context.drawImage(img, x, y, this.props.tile_width, this.props.tile_height);
+      if (this.props.debug) {
+        context.strokeRect(x, y, this.props.tile_width, this.props.tile_height);
+      }
 
       if ((2 <= tile.resource_number && tile.resource_number <= 6) || (8 <= tile.resource_number && tile.resource_number <= 12)) {
         const imgNumber = this.imgs["num" + tile.resource_number];
@@ -150,19 +210,14 @@ class Board extends Component {
     const column = settlement.location[1];
     const {x, y} = this.coordinatesFromIndices(row, column);
 
-    const {dx, dy} = [{dx: 0, dy: 15},
-                       {dx: 35, dy: 0},
-                       {dx: 70, dy: 20},
-                       {dx: 70, dy: 60},
-                       {dx: 35, dy: 80},
-                       {dx: 0, dy: 60}][settlement.location[2]]
+    const {dx, dy} = this.settlementOffsets[settlement.location[2]]
 
     context.fillStyle = this.colorForPlayer(settlement.owner);
-    context.fillRect(x + dx*2, y + dy*2, 20, 20);
+    context.fillRect(x + dx, y + dy, 20, 20);
 
     if (settlement.settlement === 2) { //is a city
       context.fillStyle = "black";
-      context.fillRect(x + dx*2 + 5, y + dy*2 + 5, 10, 10);
+      context.fillRect(x + dx + 5, y + dy + 5, 10, 10);
     }
   }
 
@@ -180,21 +235,11 @@ class Board extends Component {
     x = (x1 + x2) / 2;
     y = (y1 + y2) / 2;
 
-    var {dx, dy} = [{dx: 0, dy: 15},
-                       {dx: 35, dy: 0},
-                       {dx: 70, dy: 20},
-                       {dx: 70, dy: 60},
-                       {dx: 35, dy: 80},
-                       {dx: 0, dy: 60}][road.v1[2]];
+    var {dx, dy} = this.settlementOffsets[road.v1[2]];
     const dx1 = dx;
     const dy1 = dy;
 
-    var {dx, dy} = [{dx: 0, dy: 15},
-                       {dx: 35, dy: 0},
-                       {dx: 70, dy: 20},
-                       {dx: 70, dy: 60},
-                       {dx: 35, dy: 80},
-                       {dx: 0, dy: 60}][road.v2[2]];
+    var {dx, dy} = this.settlementOffsets[road.v2[2]];
     const dx2 = dx;
     const dy2 = dy;
 
@@ -202,7 +247,7 @@ class Board extends Component {
     const dy = (dy1 + dy2) / 2;
 
     context.fillStyle = this.colorForPlayer(road.owner);
-    context.fillRect(x + dx*2, y + dy*2, 12, 12);
+    context.fillRect(x + dx, y + dy, 12, 12);
   }
 
   zoom(scaleUpdate) {
@@ -225,6 +270,11 @@ class Board extends Component {
     this.setState( {"mouseDownInCanvas": true,
                     "canvasMouseX": e.pageX,
                     "canvasMouseY": e.pageY} );
+
+    let {row, column} = this.containingTileForPoint(e.pageX, e.pageY);
+    let {itemType, itemIndex} = this.closestItemForPointAndTile(e.pageX, e.pageY, row, column);
+    this.props.on_item_update(row, column, itemIndex, itemType);
+    console.log(row, column, itemIndex, itemType);
   }
 
   onCanvasMouseMove(e) {
